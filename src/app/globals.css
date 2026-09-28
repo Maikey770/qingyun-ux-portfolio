@@ -1,0 +1,387 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── FONT IMPORTS ──────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ─── CSS CUSTOM PROPERTIES (DESIGN TOKENS) ────────────────────────────────── */
+:root {
+  /* Font families — tokenized for easy swap */
+  /* To switch display font, change this one variable */
+  --font-display: 'Instrument Serif';
+  --font-body: 'Inter';
+  --font-mono: 'JetBrains Mono';
+
+  /* Base palette */
+  --color-background:    #F8F6F1;
+  --color-surface:       #F0EDE6;
+  --color-surface-raised:#ECEAE3;
+  --color-border:        #E2DED7;
+
+  /* Text hierarchy */
+  --color-text-primary:   #0F0E0C;
+  --color-text-secondary: #6B6560;
+  --color-text-tertiary:  #A09890;
+
+  /* Interactive */
+  --color-accent:       #2D2D2D;
+  --color-accent-hover: #1A1A1A;
+  --color-focus:        #2563EB;
+
+  /* Navigation height token */
+  --nav-height: 72px;
+
+  /* Section spacing tokens */
+  --section-padding-mobile: 4rem;
+  --section-padding-tablet: 6rem;
+  --section-padding-desktop: 7.5rem;
+}
+
+/* ─── BASE LAYER ────────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-size: 18px;
+    line-height: 1.65;
+    /* Grain texture overlay */
+    position: relative;
+  }
+
+  /* Grain texture via pseudo-element on body */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--color-text-primary);
+    color: var(--color-background);
+  }
+
+  /* Focus visible */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Skip to content */
+  .skip-to-content {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    z-index: 9999;
+    padding: 0.5rem 1rem;
+    background: var(--color-text-primary);
+    color: var(--color-background);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: top 0.2s;
+  }
+
+  .skip-to-content:focus {
+    top: 1rem;
+  }
+
+  /* Typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  p {
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-weight: 400;
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--font-mono), 'Courier New', monospace;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* ─── COMPONENT LAYER ───────────────────────────────────────────────────────── */
+@layer components {
+  /* Container — wider max-width, less horizontal padding to use more screen */
+  .container-content {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+
+    @media (min-width: 768px)  { padding-inline: 3rem; }
+    @media (min-width: 1024px) { padding-inline: 4rem; }
+    @media (min-width: 1280px) { padding-inline: 5rem; }
+  }
+
+  /* Section spacing */
+  .section-padding {
+    padding-block: var(--section-padding-mobile);
+
+    @media (min-width: 768px)  { padding-block: var(--section-padding-tablet); }
+    @media (min-width: 1024px) { padding-block: var(--section-padding-desktop); }
+  }
+
+  /* Prose width constraint — wider for larger text */
+  .prose-width {
+    max-width: 760px;
+  }
+
+  /* Navigation link underline animation */
+  .nav-link {
+    position: relative;
+    color: var(--color-text-secondary);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: color 0.25s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--color-text-primary);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    &:hover {
+      color: var(--color-text-primary);
+
+      &::after {
+        transform: scaleX(1);
+      }
+    }
+
+    &.active {
+      color: var(--color-text-primary);
+
+      &::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  /* Tag / Chip */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+
+  .tag-mono {
+    @apply tag;
+    font-family: var(--font-mono);
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 11px;
+  }
+
+  /* Section label (eyebrow text) */
+  .section-label {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  /* Thin rule */
+  .rule {
+    width: 100%;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  /* Mono label (for section numbers) */
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.05em;
+  }
+
+  /* Pull quote */
+  .pull-quote {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3vw, 36px);
+    font-style: italic;
+    line-height: 1.3;
+    color: var(--color-text-primary);
+    max-width: 800px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  /* Code block */
+  .code-block {
+    background: #1A1A2E;
+    border-radius: 8px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.65;
+    color: #C8C0D8;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  .code-block .keyword  { color: #9B7FBF; }
+  .code-block .string   { color: #7FB5A0; }
+  .code-block .comment  { color: #6B6080; }
+  .code-block .number   { color: #C4A84A; }
+  .code-block .function { color: #7FAFD4; }
+
+  /* Stat block */
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+
+  /* Project page hero (dark variant for Between Feelings) */
+  .project-hero-dark {
+    background: #0D0B14;
+    color: #E8E0F0;
+  }
+
+  /* Marquee track */
+  .marquee-track {
+    display: flex;
+    gap: 2rem;
+    animation: marquee 40s linear infinite;
+    width: max-content;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Decision card accent border */
+  .decision-card {
+    position: relative;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.75rem;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--decision-accent, var(--color-text-secondary));
+    }
+  }
+
+  /* Scroll reveal utility */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+                transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Prefers reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .marquee-track {
+      animation: none;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* ─── UTILITIES LAYER ───────────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Between Feelings dark page overrides */
+  .bf-page {
+    --color-background:    #0D0B14;
+    --color-surface:       #1A1525;
+    --color-surface-raised:#221D32;
+    --color-border:        #2D2540;
+    --color-text-primary:  #E8E0F0;
+    --color-text-secondary:#9B90B0;
+    --color-text-tertiary: #6B6080;
+    --color-accent:        #9B7FBF;
+
+    background-color: #0D0B14;
+    color: #E8E0F0;
+  }
+}
